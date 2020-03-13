@@ -34,16 +34,7 @@ public class ThermalView extends View {
     private Paint mPaint;
     private Paint mPaintT;
 
-    static int[][] arr = new int[36][36];
-
-    static {
-        Random random = new Random();
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                arr[i][j] = (int) (Math.random() * 50);
-            }
-        }
-    }
+    static ValueBean[][] arr = new ValueBean[32][32];
 
 
     private void initView(Context context) {
@@ -94,30 +85,29 @@ public class ThermalView extends View {
         super.onDraw(canvas);
 
 
+        if (arr.length == 0) {
+            return;
+        }
+
         for (int i = 1; i < arr.length; i++) {
-            int[] j = arr[i];
+            ValueBean[] j = arr[i];
             for (int k = 1; k < j.length; k++) {
-                int a = j[k];
+                ValueBean bean = j[k];
 //                Log.i(TAG, "onDraw: " + i + " == " + k);
-                if (k % 2 != 0) {
-                    mPaint.setColor(Color.WHITE);
-                    canvas.drawPoint(50 + (k * mean), 50 + i * mean, mPaint);
-                } else {
-//                    Log.i(TAG, "onDraw: " + k);
-                    mPaint.setColor(Color.RED);
-                    canvas.drawPoint(50 + k * mean, 50 + i * mean, mPaint);
-                }
-                canvas.drawText(a + "", 50 + k * mean, 50 + i * mean, mPaintT);
+                mPaint.setColor(bean.getColor());
+                canvas.drawPoint(50 + (k * mean), 50 + i * mean, mPaint);
+                canvas.drawText(bean.getValue() + "", 50 + k * mean, 50 + i * mean, mPaintT);
 
             }
         }
-//        mPaint.setColor(Color.RED);
-//        canvas.drawPoint(100, 100, mPaint);
-//        mPaint.setColor(Color.BLUE);
-//        canvas.drawPoint(300, 100, mPaint);
-/**
- * 100 100 / 100 200 / 100 300 / 100 400
- * 200 100 / 200 200 / 200 300 / 200 400
- */
+    }
+
+    public void setData(ValueBean[][] arrValue) {
+        for (int i = 0; i < arrValue.length; i++) {
+            for (int j = 0; j < arrValue[i].length; j++) {
+                arr[i][j] = arrValue[i][j];
+            }
+        }
+        invalidate();
     }
 }
